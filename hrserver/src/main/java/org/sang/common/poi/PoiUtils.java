@@ -1,22 +1,41 @@
 package org.sang.common.poi;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.jewin.hr.vo.SalaryMonthDetailVO;
 import org.apache.poi.hpsf.DocumentSummaryInformation;
 import org.apache.poi.hpsf.SummaryInformation;
-import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
-import org.sang.bean.*;
+import org.sang.bean.Department;
+import org.sang.bean.Employee;
+import org.sang.bean.JobLevel;
+import org.sang.bean.Nation;
+import org.sang.bean.PoliticsStatus;
+import org.sang.bean.Position;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sang on 2018/1/16.
@@ -231,6 +250,9 @@ public class PoiUtils {
                     employee = new Employee();
                     for (int k = 0; k < physicalNumberOfCells; k++) {
                         HSSFCell cell = row.getCell(k);
+                        if (cell == null) {
+                            continue;
+                        }
                         switch (cell.getCellTypeEnum()) {
                             case STRING: {
                                 String cellValue = cell.getStringCellValue();
@@ -333,5 +355,102 @@ public class PoiUtils {
             e.printStackTrace();
         }
         return emps;
+    }
+
+
+    /**
+     * 导入工资明细
+     * @param file
+     * @param salaryMonth
+     * @return
+     */
+    public static List<SalaryMonthDetailVO> importSalaryDetial (MultipartFile file, String salaryMonth) {
+        List<SalaryMonthDetailVO> salaryDetails = Lists.newLinkedList();
+        Map<Integer, String> itemMap = Maps.newHashMap();
+        Map<Integer, String> telnoMap = Maps.newHashMap();
+
+        try {
+            HSSFWorkbook workbook = new HSSFWorkbook(new POIFSFileSystem(file.getInputStream()));
+            int numberOfSheets = workbook.getNumberOfSheets();
+            for (int i = 0; i < numberOfSheets; i++) {
+                HSSFSheet sheet = workbook.getSheetAt(i);
+                int physicalNumberOfRows = sheet.getPhysicalNumberOfRows();
+                for (int j = 0; j < physicalNumberOfRows; j++) {
+                    HSSFRow row = sheet.getRow(j);
+                    if (j == 0) {
+                        Iterator<Cell> it = row.cellIterator();
+                        while (it.hasNext()) {
+                            Cell cell = it.next();
+                            itemMap.put(cell.getColumnIndex(), cell.getStringCellValue().trim());
+                        }
+                        continue;
+                    }
+
+                    if (row == null) {
+                        continue;//没数据
+                    }
+                    int physicalNumberOfCells = row.getPhysicalNumberOfCells();
+                    for (int k = 0; k < physicalNumberOfCells; k++) {
+                        HSSFCell cell = row.getCell(k);
+                        switch (cell.getCellTypeEnum()) {
+                            case STRING:
+                                String cellValue = cell.getStringCellValue();
+                                if (!StringUtils.isEmpty(cellValue)) {
+                                    if("手机号".equals(itemMap.get(k))) {
+                                        telnoMap.put(cell.getRowIndex(), cellValue);
+                                    }
+                                }
+                                break;
+                            case NUMERIC:
+                                SalaryMonthDetailVO salaryMonthDetail = new SalaryMonthDetailVO();
+
+                                if("手机号".equals(itemMap.get(k))) {
+                                    telnoMap.put(cell.getRowIndex(), BigDecimal.valueOf(cell.getNumericCellValue()).toPlainString());
+                                    break;
+                                }
+
+                                String telno = telnoMap.get(cell.getRowIndex());
+                                if("当月出勤天数".equals(itemMap.get(k).trim())) {
+                                    salaryMonthDetail.setTotalWorkDays(BigDecimal.valueOf(cell.getNumericCellValue()).intValue());
+                                    salaryMonthDetail.setTelno(telno);
+                                    salaryDetails.add(salaryMonthDetail);
+                                    break;
+                                }
+
+                                if("实际出勤天数".equals(itemMap.get(k).trim())) {
+                                    salaryMonthDetail.setActWorkDays(BigDecimal.valueOf(cell.getNumericCellValue()).intValue());
+                                    salaryMonthDetail.setTelno(telno);
+                                    salaryDetails.add(salaryMonthDetail);
+                                    break;
+                                }
+
+                                if (StringUtils.isEmpty(telno)) {
+                                    throw new IllegalArgumentException("没有找到手机号");
+                                } else {
+                                    BigDecimal amt = BigDecimal.valueOf(cell.getNumericCellValue());
+                                    salaryMonthDetail.setItemAmt(amt);
+                                    salaryMonthDetail.setTelno(telno);
+                                    salaryMonthDetail.setItemName(itemMap.get(k));
+                                    salaryDetails.add(salaryMonthDetail);
+                                }
+                                break;
+
+                            default: {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return salaryDetails;
+    }
+
+    public static void main(String[] args) {
+        String path = "/Users/jianyang/software/导入工资明细.xls";
+//        importSalaryDetial(new File(path), "2018-03");
     }
 }

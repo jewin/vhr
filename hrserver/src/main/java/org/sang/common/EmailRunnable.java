@@ -48,7 +48,7 @@ public class EmailRunnable implements Runnable {
             content.setContent(bodyMimeMultipart);
             MimeBodyPart bodyPart = new MimeBodyPart();
             //freemarker加载邮件模板
-            Configuration cfg = new Configuration(Configuration.VERSION_2_3_27);
+            Configuration cfg = new Configuration(Configuration.VERSION_2_3_26);
             cfg.setClassLoaderForTemplateLoading(ClassLoader.getSystemClassLoader(),"ftl");
             Template emailTemplate = cfg.getTemplate("email.ftl");
             StringWriter out = new StringWriter();

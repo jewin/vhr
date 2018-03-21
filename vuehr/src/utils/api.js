@@ -43,6 +43,25 @@ export const postRequest = (url, params) => {
     }
   });
 }
+
+export const postJsonRequest = (url, params) => {
+  return axios({
+    method: 'post',
+    url: `${base}${url}`,
+    data: params,
+    transformRequest: [function (data) {
+      let ret = ''
+      for (let it in data) {
+        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+      }
+      return data
+    }],
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+}
+
 export const uploadFileRequest = (url, params) => {
   return axios({
     method: 'post',

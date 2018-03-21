@@ -9,6 +9,8 @@ import org.sang.service.DepartmentService;
 import org.sang.service.EmpService;
 import org.sang.service.JobLevelService;
 import org.sang.service.PositionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,9 @@ import java.util.concurrent.ExecutorService;
 @RestController
 @RequestMapping("/employee/basic")
 public class EmpBasicController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmpBasicController.class);
+
     @Autowired
     EmpService empService;
     @Autowired
@@ -101,10 +106,17 @@ public class EmpBasicController {
 
     @RequestMapping(value = "/importEmp", method = RequestMethod.POST)
     public RespBean importEmp(MultipartFile file) {
-        List<Employee> emps = PoiUtils.importEmp2List(file,empService.getAllNations(),empService.getAllPolitics(),departmentService.getAllDeps(),positionService.getAllPos(),jobLevelService.getAllJobLevels());
-        if (empService.addEmps(emps) == emps.size()) {
-            return new RespBean("success", "导入成功!");
+        try {
+            List<Employee> emps = PoiUtils.importEmp2List(file,empService.getAllNations(),empService.getAllPolitics(),departmentService.getAllDeps(),positionService.getAllPos(),jobLevelService.getAllJobLevels());
+
+            if (empService.addEmps(emps) == emps.size()) {
+                return new RespBean("success", "导入成功!");
+            } else {
+                return RespBean.fail("导入员工数据失败。");
+            }
+        } catch (Exception e) {
+            LOGGER.error("导入员工数据失败。", e);
+            return new RespBean("error", "导入失败!");
         }
-        return new RespBean("error", "导入失败!");
     }
 }

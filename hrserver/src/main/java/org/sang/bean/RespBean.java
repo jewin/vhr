@@ -16,6 +16,17 @@ public class RespBean {
         this.msg = msg;
     }
 
+    public static RespBean success(String msg) {
+        RespBean respBean = new RespBean("success", msg);
+        return respBean;
+    }
+
+
+    public static RespBean fail(String msg) {
+        RespBean respBean = new RespBean("error", msg);
+        return respBean;
+    }
+
     public String getStatus() {
 
         return status;

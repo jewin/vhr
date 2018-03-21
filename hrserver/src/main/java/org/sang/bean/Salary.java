@@ -1,21 +1,24 @@
 package org.sang.bean;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class Salary {
     private Integer id;
-    private Integer bonus;
-    private Integer lunchSalary;
-    private Integer trafficSalary;
-    private Integer basicSalary;
-    private Integer allSalary;
-    private Integer pensionBase;
-    private Float pensionPer;
+    private BigDecimal bonus;
+    private BigDecimal lunchSalary;
+    private BigDecimal jobSalary;
+    private BigDecimal knowledgeSalary;
+    private BigDecimal trafficSalary;
+    private BigDecimal basicSalary;
+    private BigDecimal allSalary;
+    private BigDecimal pensionBase;
+    private BigDecimal pensionPer;
     private Date createDate;
-    private Integer medicalBase;
-    private Float medicalPer;
-    private Integer accumulationFundBase;
-    private Float accumulationFundPer;
+    private BigDecimal medicalBase;
+    private BigDecimal medicalPer;
+    private BigDecimal accumulationFundBase;
+    private BigDecimal accumulationFundPer;
     private String name;
 
     public Integer getId() {
@@ -26,59 +29,59 @@ public class Salary {
         this.id = id;
     }
 
-    public Integer getBonus() {
+    public BigDecimal getBonus() {
         return bonus;
     }
 
-    public void setBonus(Integer bonus) {
+    public void setBonus(BigDecimal bonus) {
         this.bonus = bonus;
     }
 
-    public Integer getLunchSalary() {
+    public BigDecimal getLunchSalary() {
         return lunchSalary;
     }
 
-    public void setLunchSalary(Integer lunchSalary) {
+    public void setLunchSalary(BigDecimal lunchSalary) {
         this.lunchSalary = lunchSalary;
     }
 
-    public Integer getTrafficSalary() {
+    public BigDecimal getTrafficSalary() {
         return trafficSalary;
     }
 
-    public void setTrafficSalary(Integer trafficSalary) {
+    public void setTrafficSalary(BigDecimal trafficSalary) {
         this.trafficSalary = trafficSalary;
     }
 
-    public Integer getBasicSalary() {
+    public BigDecimal getBasicSalary() {
         return basicSalary;
     }
 
-    public void setBasicSalary(Integer basicSalary) {
+    public void setBasicSalary(BigDecimal basicSalary) {
         this.basicSalary = basicSalary;
     }
 
-    public Integer getAllSalary() {
+    public BigDecimal getAllSalary() {
         return allSalary;
     }
 
-    public void setAllSalary(Integer allSalary) {
+    public void setAllSalary(BigDecimal allSalary) {
         this.allSalary = allSalary;
     }
 
-    public Integer getPensionBase() {
+    public BigDecimal getPensionBase() {
         return pensionBase;
     }
 
-    public void setPensionBase(Integer pensionBase) {
+    public void setPensionBase(BigDecimal pensionBase) {
         this.pensionBase = pensionBase;
     }
 
-    public Float getPensionPer() {
+    public BigDecimal getPensionPer() {
         return pensionPer;
     }
 
-    public void setPensionPer(Float pensionPer) {
+    public void setPensionPer(BigDecimal pensionPer) {
         this.pensionPer = pensionPer;
     }
 
@@ -90,35 +93,35 @@ public class Salary {
         this.createDate = createDate;
     }
 
-    public Integer getMedicalBase() {
+    public BigDecimal getMedicalBase() {
         return medicalBase;
     }
 
-    public void setMedicalBase(Integer medicalBase) {
+    public void setMedicalBase(BigDecimal medicalBase) {
         this.medicalBase = medicalBase;
     }
 
-    public Float getMedicalPer() {
+    public BigDecimal getMedicalPer() {
         return medicalPer;
     }
 
-    public void setMedicalPer(Float medicalPer) {
+    public void setMedicalPer(BigDecimal medicalPer) {
         this.medicalPer = medicalPer;
     }
 
-    public Integer getAccumulationFundBase() {
+    public BigDecimal getAccumulationFundBase() {
         return accumulationFundBase;
     }
 
-    public void setAccumulationFundBase(Integer accumulationFundBase) {
+    public void setAccumulationFundBase(BigDecimal accumulationFundBase) {
         this.accumulationFundBase = accumulationFundBase;
     }
 
-    public Float getAccumulationFundPer() {
+    public BigDecimal getAccumulationFundPer() {
         return accumulationFundPer;
     }
 
-    public void setAccumulationFundPer(Float accumulationFundPer) {
+    public void setAccumulationFundPer(BigDecimal accumulationFundPer) {
         this.accumulationFundPer = accumulationFundPer;
     }
 
@@ -129,4 +132,21 @@ public class Salary {
     public void setName(String name) {
         this.name = name;
     }
+
+    public BigDecimal getJobSalary() {
+        return jobSalary;
+    }
+
+    public void setJobSalary(BigDecimal jobSalary) {
+        this.jobSalary = jobSalary;
+    }
+
+    public BigDecimal getKnowledgeSalary() {
+        return knowledgeSalary;
+    }
+
+    public void setKnowledgeSalary(BigDecimal knowledgeSalary) {
+        this.knowledgeSalary = knowledgeSalary;
+    }
 }
+

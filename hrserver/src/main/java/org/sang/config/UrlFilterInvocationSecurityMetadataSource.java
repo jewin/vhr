@@ -32,8 +32,12 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
         }
         List<Menu> allMenu = menuService.getAllMenu();
         for (Menu menu : allMenu) {
-            if (antPathMatcher.match(menu.getUrl(), requestUrl)&&menu.getRoles().size()>0) {
-                List<Role> roles = menu.getRoles();
+            if ("/".equals(menu.getPath())) {
+                System.out.println(111);
+            }
+            String menuUrl = menu.getUrl();
+            List<Role> roles = menu.getRoles();
+            if (antPathMatcher.match(menuUrl, requestUrl) && roles.size()>0) {
                 int size = roles.size();
                 String[] values = new String[size];
                 for (int i = 0; i < size; i++) {

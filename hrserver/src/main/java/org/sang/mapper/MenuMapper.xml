@@ -37,7 +37,10 @@
             </collection>
         </collection>
     </resultMap>
-    <select id="getAllMenu" resultMap="BaseResultMap">
+
+    <cache eviction="FIFO" flushInterval="600000" size="512" readOnly="true" />
+
+    <select id="getAllMenu" resultMap="BaseResultMap" useCache="true">
         select m.*,r.`id` as rid,r.`name` as rname,r.`nameZh` as rnamezh from menu m left join menu_role mr on m.`id`=mr.`mid` left join role r on mr.`rid`=r.`id` WHERE m.`enabled`=true order by m.`id` desc
     </select>
     <select id="getMenusByHrId" parameterType="Long" resultMap="BaseResultMap">
